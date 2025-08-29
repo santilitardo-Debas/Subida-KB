@@ -1,43 +1,39 @@
-const express = require("express");
-const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const serveIndex = require('serve-index');
 
 const app = express();
 const PORT = 3000;
 
-// Sirve archivos estáticos desde /public
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// ⚡ Ruta explícita para admin.html
-app.get("/admin.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "admin.html"));
-});
-
-// Configuración de Multer
+// === Configuración de multer ===
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+    cb(null, Date.now() + '_' + file.originalname);
   }
 });
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
-// Ruta para subir archivos
-app.post("/upload", upload.single("archivo"), (req, res) => {
-  console.log("Subido por:", req.body.nombre);
-  res.send("<h2>✅ Archivo subido con éxito</h2><a href='/'>Volver</a>");
-});
-
-// Listar archivos
-app.get("/files", (req, res) => {
-  fs.readdir("uploads/", (err, files) => {
-    if (err) return res.status(500).json({ error: "No se pudieron listar" });
-    res.json(files);
-  });
-});
-
-app.listen(PORT, () =>
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)
+// === Middleware para servir y listar archivos ===
+app.use('/uploads', 
+  express.static(path.join(__dirname, 'uploads')),
+  serveIndex(path.join(__dirname, 'uploads'), { icons: true })
 );
+
+// === Ruta de inicio ===
+app.get('/', (req, res) => {
+  res.send('<h1>Servidor funcionando 🚀</h1><a href="/uploads/">Ver archivos subidos</a>');
+});
+
+// === Subir archivo ===
+app.post('/upload', upload.single('file'), (req, res) => {
+  res.send(`Archivo subido: <a href="/uploads/${req.file.filename}">${req.file.filename}</a>`);
+});
+
+// === Iniciar servidor ===
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
