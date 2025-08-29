@@ -1,0 +1,47 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 320px;
+}
+
+h2 {
+  margin-bottom: 1rem;
+}
+
+input[type="text"],
+input[type="file"] {
+  display: block;
+  width: 100%;
+  margin: 0.8rem 0;
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+button:hover {
+  background: #5563c1;
+}
+

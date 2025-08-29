@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Archivos</title>
+  <link rel="stylesheet" href="public/style.css">
+</head>
+<body>
+  <div class="card">
+    <h2>📂 Archivos recibidos</h2>
+    <ul id="fileList"></ul>
+  </div>
+
+  <script>
+    async function cargarArchivos() {
+      const res = await fetch("/files");
+      const archivos = await res.json();
+      const lista = document.getElementById("fileList");
+      lista.innerHTML = "";
+      archivos.forEach(a => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="/uploads/${a}" download>${a}</a>`;
+        lista.appendChild(li);
+      });
+    }
+    cargarArchivos();
+  </script>
+</body>
+</html>
